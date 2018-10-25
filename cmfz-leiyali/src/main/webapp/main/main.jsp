@@ -5,26 +5,45 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>持名法州主页</title>
+<link rel="icon" href="../img/favicon.jpg" type="image/x-icon" />
 <link rel="stylesheet" type="text/css" href="../themes/default/easyui.css">   
-<link rel="stylesheet" type="text/css" href="../themes/IconExtension.css">   
-<script type="text/javascript" src="../js/jquery.min.js"></script>   
-<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>  
+<link rel="stylesheet" type="text/css" href="../themes/IconExtension.css">
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" type="text/css"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/themes/icon.css" type="text/css"/>
+<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="../js/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/datagrid-detailview.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.edatagrid.js"></script>
 <script type="text/javascript">
+    function addTab(title,iconCls,url){
+        if($("#tt").tabs("exists",title)){
+            $("#tt").tabs("select",title);
+        }else{
+            $("#tt").tabs("add",{
+                title: title,
+                selected: true,
+                iconCls:iconCls,
+                closable:true,
+                href:"${pageContext.request.contextPath}/"+url
+            })
+        }
+    }
     $(function(){
-        $("div[name='children']").dblclick(function(){
-            var title=$(this).html();
-            var obj=$(this).prev().val();
-            console.log(obj);
-            if($("#tt").tabs("exists",title)){
-                $("#tt").tabs("select",title);
-            }else{
-                $("#tt").tabs("add",{
-                    title: title,
-                    selected: true,
-                    iconCls:'icon-add',
-                    closable:true,
-                    href:""
+        $.ajax({
+            url:"${pageContext.request.contextPath}/menu/query",
+            dataType:"JSON",
+            success:function(data){
+                $.each(data,function(i,n){
+                    var c="";
+                    $.each(n.children,function(ii,second){
+                        c+="<div onclick=\"addTab('"+second.title+"','"+second.iconCls+"','"+second.url+"')\" style='text-align: center'><a class='easyui-linkbutton' data-options=\"iconCls:'"+second.iconCls+"',title:'"+second.title+"'\">"+second.title+"</a><div>";
+                    });
+                    $("#aa").accordion("add",{
+                        title:n.title,
+                        content:c,
+                        selected: false
+                    })
                 })
             }
         });
@@ -44,14 +63,7 @@
        
     <div data-options="region:'west',title:'导航菜单',split:true" style="width:220px;">
     	<div id="aa" class="easyui-accordion" data-options="fit:true">
-    		<c:forEach items="${list}" var="menu">
-                <div title="${menu.title}" data-options="iconCls:'icon-add'">
-                    <c:forEach items="${menu.children}" var="menu2">
-                        <input type="hidden" value="${menu2}"><div name="children" data-options="iconCls:'icon-add'">${menu2.title}</div>
-                    </c:forEach>
-                </div>
-            </c:forEach>
-		</div>  
+		</div>
     </div>
     <div data-options="region:'center'">
     	<div id="tt" class="easyui-tabs" data-options="fit:true,narrow:true,pill:true">   

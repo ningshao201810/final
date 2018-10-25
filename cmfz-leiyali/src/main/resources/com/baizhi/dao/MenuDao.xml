@@ -9,10 +9,11 @@
             <id column="mid" property="id"/>
             <result column="mtitle" property="title"/>
             <result column="miconCls" property="iconCls"/>
+            <result column="murl" property="url"/>
         </collection>
     </resultMap>
     <select id="query" resultMap="map">
-        select m1.*,m2.id mid,m2.title mtitle,m2.iconCls miconCls from menu m1 left join menu m2 on m2.parentId=m1.id where m1.parentId is null
+        select m1.*,m2.id mid,m2.title mtitle,m2.iconCls miconCls,m2.url murl from menu m1 left join menu m2 on m2.parentId=m1.id where m1.parentId is null
     </select>
 </mapper>
 

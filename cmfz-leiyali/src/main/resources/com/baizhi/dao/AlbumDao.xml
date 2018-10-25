@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.dao.AlbumDao">
+    <resultMap id="map" type="com.baizhi.entity.Album">
+        <id column="aid" property="id"/>
+        <result column="atitle" property="title"/>
+        <collection property="children" javaType="java.util.List" ofType="Chapter">
+            <id column="id" property="id"/>
+            <result column="title" property="title"/>
+            <result column="url" property="url"/>
+            <result column="size" property="size"/>
+            <result column="duration" property="duration"/>
+        </collection>
+    </resultMap>
+    <select id="query" resultMap="map">
+        select a.id aid,a.title atitle,c.* from album a left join chapter c on a.id=c.alId
+    </select>
+    <select id="getAlbum" resultType="Album">
+        select id,title from album
+    </select>
+</mapper>
+
